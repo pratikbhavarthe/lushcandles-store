@@ -116,7 +116,13 @@ const SearchPanel = ({ onNavigate }: { onNavigate: () => void }) => {
   )
 }
 
-const Search = () => {
+type SearchProps = {
+  /** Trigger content; defaults to a magnifying-glass icon. */
+  children?: React.ReactNode
+  className?: string
+}
+
+const Search = ({ children, className = NAV_ICON_CLASS }: SearchProps) => {
   const { state: isOpen, open, close } = useToggleState()
   const { countryCode } = useParams<{ countryCode: string }>()
 
@@ -129,11 +135,11 @@ const Search = () => {
           event.preventDefault()
           open()
         }}
-        aria-label="Search products"
-        className={NAV_ICON_CLASS}
+        aria-label={children ? undefined : "Search products"}
+        className={className}
         data-testid="nav-search-button"
       >
-        <MagnifyingGlass />
+        {children ?? <MagnifyingGlass />}
       </Link>
 
       <SearchDrawer isOpen={isOpen} close={close}>

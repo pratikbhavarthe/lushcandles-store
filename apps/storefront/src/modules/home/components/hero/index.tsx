@@ -8,7 +8,7 @@ const Hero = () => {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative w-full overflow-hidden border-b border-lush-sand bg-lush-linen"
+      className="relative -mt-[72px] w-full overflow-hidden border-b border-lush-sand bg-lush-linen pt-[72px]"
     >
       <div className="content-container grid min-h-[70vh] items-center gap-12 py-20 small:grid-cols-[1.2fr_1fr]">
         <div className="flex flex-col gap-6 motion-safe:animate-fade-in-top">

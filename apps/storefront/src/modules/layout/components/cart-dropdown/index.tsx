@@ -9,14 +9,13 @@ import {
 import { retrieveCart } from "@lib/data/cart"
 import { CART_UPDATED_EVENT } from "@lib/util/cart-events"
 import { convertToLocale } from "@lib/util/money"
-import { ShoppingBag } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@modules/common/components/ui"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
 import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { NAV_ICON_CLASS as NAV_ICON_BUTTON } from "@modules/layout/nav-styles"
+import { NAV_TEXT_LINK } from "@modules/layout/nav-styles"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { usePathname } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
@@ -112,22 +111,16 @@ const CartDropdown = ({
       <Popover className="relative h-full flex items-center">
         <PopoverButton as="div">
           <LocalizedClientLink
-            className={NAV_ICON_BUTTON}
+            className={NAV_TEXT_LINK}
             href="/cart"
             aria-label={`Cart, ${totalItems} ${totalItems === 1 ? "item" : "items"}`}
             data-testid="nav-cart-link"
           >
-            <ShoppingBag />
-            {totalItems > 0 && (
-              <span
-                key={totalItems}
-                aria-hidden
-                className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-lush-ink px-1 text-[10px] font-medium leading-none text-lush-ivory motion-safe:animate-[badge-pop_300ms_ease-out]"
-                data-testid="nav-cart-count"
-              >
-                {totalItems}
-              </span>
-            )}
+            Cart (
+            <span key={totalItems} className="inline-block motion-safe:animate-[badge-pop_300ms_ease-out]" data-testid="nav-cart-count">
+              {totalItems}
+            </span>
+            )
           </LocalizedClientLink>
         </PopoverButton>
         <Transition
@@ -142,7 +135,7 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+12px)] right-0 bg-lush-ivory border border-lush-sand rounded-xl shadow-[0_24px_48px_-24px_rgba(42,36,32,0.35)] w-[420px] text-ui-fg-base overflow-hidden"
+            className="hidden small:block absolute top-[calc(100%+26px)] right-0 bg-white border border-lush-sand shadow-[0_24px_48px_-24px_rgba(42,36,32,0.35)] w-[420px] text-ui-fg-base overflow-hidden"
             data-testid="nav-cart-dropdown"
           >
             <div className="p-4 flex items-center justify-center">
