@@ -6,18 +6,18 @@ import { listCollections } from "@lib/data/collections"
 import { STORE_NAME } from "@lib/util/site-constants"
 import FlameMark from "@modules/layout/components/nav-bar/flame-mark"
 
-// Lush Candles palette for the dithered ridges: ivory paper through sand and
-// clay to the deepest umber. The luminance steps follow the component's
-// "glacier" demo ramp so the range keeps the same depth in warm colours.
-// Text colours checked against the paper for WCAG AA: ink 14.3:1,
-// muted 6.2:1, link-hover accent (tones[4]) 6.1:1.
+// Lush Candles "07 Pink" palette for the dithered ridges: page tint, Cotton
+// Candy, Rose Pink, Candy Pink, then deepened Passion Pink shades. The
+// luminance steps follow the component's "glacier" demo ramp so the range
+// keeps the same depth. Text on paper (WCAG AA): ink 10.8:1, muted 6.2:1,
+// link-hover accent (tones[4]) 6.5:1.
 const PALETTE = {
-  paper: "#FAF7F2",
-  ink: "#2A2420",
-  muted: "#6B5A4A",
-  line: "#E6DCCC",
-  heart: "#7C5535",
-  tones: ["#FAF7F2", "#EEE1CE", "#D8BC96", "#B0865C", "#7C5535", "#4A3221", "#22160E"],
+  paper: "#FFF7F9",
+  ink: "#3A3A3A",
+  muted: "#5E5E5E",
+  line: "#FFD1DC",
+  heart: "#FF2D55",
+  tones: ["#FFF7F9", "#FFD1DC", "#FF8FA9", "#FF4F81", "#B3123A", "#6A0A22", "#2B0A13"],
 }
 
 const FIGTREE = "var(--font-figtree), ui-sans-serif, system-ui, sans-serif"

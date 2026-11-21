@@ -20,15 +20,28 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
-        // Lush Candles brand palette: warm ivory, linen and earthy neutrals.
+        // Lush Candles brand palette ("07 Pink"). The six named pinks are the
+        // brand colours. Role tokens (ivory, linen, ...) keep their names so
+        // every component follows the palette; text roles use charcoal and a
+        // deepened Passion Pink because none of the six pinks reaches WCAG AA
+        // as text. Contrast on the page (ivory):
+        //   ink 10.8:1, umber 6.2:1, clay 6.5:1, white on clay 6.9:1.
         lush: {
-          ivory: "#FAF7F2",
-          linen: "#F3EDE4",
-          sand: "#E6DCCC",
-          taupe: "#A6957E",
-          clay: "#8A6F55",
-          umber: "#5A4636",
-          ink: "#2A2420",
+          // Brand palette
+          cotton: "#FFD1DC", // Cotton Candy
+          blush: "#FF7F7F", // Blush Pink
+          candy: "#FF4F81", // Candy Pink
+          rose: "#FF8FA9", // Rose Pink
+          coral: "#FF85A2", // Coral Pink
+          passion: "#FF2D55", // Passion Pink
+          // Roles
+          ivory: "#FFF7F9", // page background: tint of Cotton Candy
+          linen: "#FFD1DC", // surfaces: Cotton Candy
+          sand: "#FFD1DC", // hairlines and soft fills: Cotton Candy
+          taupe: "#FF8FA9", // outlines: Rose Pink
+          clay: "#B3123A", // accent text and primary buttons: deepened Passion Pink
+          umber: "#5E5E5E", // secondary text
+          ink: "#3A3A3A", // primary text: palette charcoal
         },
         grey: {
           0: "#FFFFFF",
