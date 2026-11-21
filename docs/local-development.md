@@ -102,3 +102,18 @@ The backend should log the Redis connections for `event-bus-redis`,
 
 If you see `redisUrl not found. A fake redis instance will be used`, then
 `REDIS_URL` is missing from `apps/backend/.env`.
+
+## Changing the search index
+
+The product search index is defined in `apps/backend/src/search/`. Changing
+its fields (for example adding a price currency) is a schema change, and
+reloading the dev server does not apply it. Until it is applied, the store page
+fails with `Field "…" is not facetable on the postgres search provider`. Apply
+it, then restart the backend so the new index is filled:
+
+```bash
+cd apps/backend && bunx medusa db:migrate:search
+```
+
+`medusa db:migrate` runs the same step, so deployments pick it up
+automatically.
