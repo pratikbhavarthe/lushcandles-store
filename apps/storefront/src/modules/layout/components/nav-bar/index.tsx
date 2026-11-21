@@ -125,10 +125,10 @@ export default function NavBar({ shopMenu, regions, locales, currentLocale, cart
         onPointerLeave={(e) => e.pointerType === "mouse" && openMenu && schedule(null, CLOSE_DELAY_MS)}
         onPointerEnter={(e) => e.pointerType === "mouse" && openMenu && window.clearTimeout(timer.current)}
         className={clx(
-          "absolute inset-x-0 top-0 border-b transition-[background-color,border-color,box-shadow] duration-300 motion-reduce:transition-none",
+          "absolute inset-x-0 top-0 border-b transition-[background-color,border-color] duration-300 motion-reduce:transition-none",
           solid
             ? "border-lush-sand/70 bg-white"
-            : "border-transparent bg-transparent group-data-[scrolled=true]:border-lush-sand/70 group-data-[scrolled=true]:bg-white group-data-[scrolled=true]:shadow-[0_10px_30px_-24px_rgba(42,36,32,0.5)]"
+            : "border-transparent bg-transparent group-data-[scrolled=true]:border-lush-sand/70 group-data-[scrolled=true]:bg-white"
         )}
         data-testid="nav-surface"
       >
