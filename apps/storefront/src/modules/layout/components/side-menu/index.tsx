@@ -1,5 +1,7 @@
 "use client"
 
+import { STORE_NAME } from "@lib/util/site-constants"
+
 import { Popover, PopoverPanel, Transition } from "@headlessui/react"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { ArrowRightMini, XMark } from "@medusajs/icons"
@@ -131,7 +133,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                         />
                       </div>
                       <Text className="flex justify-between txt-compact-small">
-                        © {new Date().getFullYear()} Medusa Store. All rights
+                        © {new Date().getFullYear()} {STORE_NAME}. All rights
                         reserved.
                       </Text>
                     </div>

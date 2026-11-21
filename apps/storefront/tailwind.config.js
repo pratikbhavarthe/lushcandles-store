@@ -20,6 +20,16 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
+        // Lush Candles brand palette: warm ivory, linen and earthy neutrals.
+        lush: {
+          ivory: "#FAF7F2",
+          linen: "#F3EDE4",
+          sand: "#E6DCCC",
+          taupe: "#A6957E",
+          clay: "#8A6F55",
+          umber: "#5A4636",
+          ink: "#2A2420",
+        },
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",
@@ -58,7 +68,9 @@ module.exports = {
         "3xl": "2rem",
       },
       fontFamily: {
+        display: ["var(--font-display)", "Georgia", "serif"],
         sans: [
+          "var(--font-sans)",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

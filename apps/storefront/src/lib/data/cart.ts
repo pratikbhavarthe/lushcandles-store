@@ -13,6 +13,7 @@ import {
   removeCartId,
   setCartId,
 } from "./cookies"
+import { validateIndianAddress } from "@lib/util/indian-address"
 import { getRegion } from "./regions"
 import { getLocale } from "./locale-actions"
 
@@ -320,12 +321,22 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
 
     const shippingAddress = address("shipping_address")
     const sameAsBilling = formData.get("same_as_billing") === "on"
+    const billingAddress = sameAsBilling
+      ? shippingAddress
+      : address("billing_address")
     const data: HttpTypes.StoreUpdateCart = {
       shipping_address: shippingAddress,
-      billing_address: sameAsBilling
-        ? shippingAddress
-        : address("billing_address"),
+      billing_address: billingAddress,
       email: field("email"),
+    }
+
+    const addressError =
+      validateIndianAddress(shippingAddress, "Shipping address") ||
+      (sameAsBilling
+        ? null
+        : validateIndianAddress(billingAddress, "Billing address"))
+    if (addressError) {
+      return addressError
     }
 
     await updateCart(data)

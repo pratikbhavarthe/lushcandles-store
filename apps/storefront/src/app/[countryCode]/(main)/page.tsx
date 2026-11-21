@@ -2,6 +2,7 @@ import { Metadata } from "next"
 
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { listCollections } from "@lib/data/collections"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { toJsonLd } from "@lib/util/product-structured-data"
@@ -18,9 +19,8 @@ export async function generateMetadata(props: {
   const [origin, regions] = await Promise.all([getSiteOrigin(), listRegions()])
 
   return {
-    title: "Medusa Next.js Starter Template",
-    description:
-      "A performant frontend ecommerce starter template with Next.js 16 and Medusa.",
+    title: { absolute: `${STORE_NAME} | Candles for the home` },
+    description: `Shop candles from ${STORE_NAME}.`,
     alternates: {
       canonical: `${origin}/${countryCode}`,
       languages: {
@@ -89,11 +89,29 @@ export default async function Home(props: {
         dangerouslySetInnerHTML={{ __html: toJsonLd(structuredData) }}
       />
       <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
-      </div>
+      {collections.length > 0 ? (
+        <div className="py-12">
+          <ul className="flex flex-col gap-x-6">
+            <FeaturedProducts collections={collections} region={region} />
+          </ul>
+        </div>
+      ) : (
+        <section className="content-container py-24 text-center">
+          <h2 className="font-display text-3xl text-lush-ink">
+            The collection is on its way
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-lush-umber">
+            New candles are being added. In the meantime, browse everything
+            currently available.
+          </p>
+          <LocalizedClientLink
+            href="/store"
+            className="mt-8 inline-flex h-11 items-center rounded-full border border-lush-taupe px-7 text-sm hover:border-lush-ink"
+          >
+            View all products
+          </LocalizedClientLink>
+        </section>
+      )}
     </>
   )
 }

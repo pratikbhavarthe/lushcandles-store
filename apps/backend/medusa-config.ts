@@ -1,4 +1,4 @@
-import { loadEnv, defineConfig } from "@medusajs/framework/utils"
+import { loadEnv, defineConfig, MedusaError } from "@medusajs/framework/utils"
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd())
 
@@ -10,7 +10,8 @@ const KNOWN_WEAK_SECRETS = new Set(["", "supersecret", "secret"])
 function requireSecret(name: "JWT_SECRET" | "COOKIE_SECRET"): string {
   const value = process.env[name] ?? ""
   if (isProduction && KNOWN_WEAK_SECRETS.has(value)) {
-    throw new Error(
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
       `${name} is missing or set to a known default. Generate one with: openssl rand -hex 32`
     )
   }

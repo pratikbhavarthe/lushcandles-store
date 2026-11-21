@@ -12,7 +12,7 @@ export const PolicyPage = ({
   children: React.ReactNode
 }) => (
   <div className="content-container py-12 max-w-3xl" data-testid="policy-page">
-    <h1 className="text-2xl-semi mb-8">{title}</h1>
+    <h1 className="font-display text-4xl text-lush-ink mb-8">{title}</h1>
     <div className="flex flex-col gap-6 text-base-regular text-ui-fg-base">
       {children}
     </div>
@@ -43,8 +43,12 @@ export const ShippingSummary = ({
 )
 
 export const PlaceholderNotice = () => (
-  <p className="text-ui-fg-subtle" data-testid="policy-placeholder">
-    This is placeholder content from the Medusa starter. Replace it with your
-    store&apos;s own text before launch.
+  <p
+    className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+    data-testid="policy-placeholder"
+    role="note"
+  >
+    Placeholder: this text has not been reviewed. Replace it with Lush
+    Candles&apos; approved policy before launch.
   </p>
 )

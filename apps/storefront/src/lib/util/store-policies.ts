@@ -23,6 +23,15 @@ export const getRegionPolicies = (
   region: Pick<HttpTypes.StoreRegion, "metadata"> | null | undefined
 ): StorePolicies | null => {
   const metadata = region?.metadata ?? {}
+  // Set by apps/backend/src/scripts/setup-india-market.ts until the business
+  // confirms real values. Remove the flag in Admin (Settings > Regions >
+  // Metadata) to publish the policy on the site and in structured data.
+  if (
+    metadata.policies_are_placeholders === true ||
+    metadata.policies_are_placeholders === "true"
+  ) {
+    return null
+  }
   const values = {
     returnWindowDays: toNumber(metadata.return_window_days),
     shippingRate: toNumber(metadata.shipping_rate),
