@@ -2,7 +2,7 @@
 
 ## Overview
 
-Medusa DTC Starter — a Turborepo workspace monorepo containing a Medusa backend (`@medusajs/medusa` 2.x, Node 22.22+, PostgreSQL 15+) and an optional Next.js storefront.
+Lush Candles store, built on the Medusa DTC Starter: a Bun + Turborepo workspace monorepo containing a Medusa backend (`@medusajs/medusa` 2.x, runs on Node 22.22+, PostgreSQL 14+, Redis) and a Next.js storefront. Package manager is **bun** (`bun.lock`); Medusa itself still runs on Node. Project docs live in `docs/`.
 
 ## Before You Start
 
@@ -86,7 +86,8 @@ Run from the repo root unless noted. Turbo skips missing apps automatically.
 ```bash
 <pm> run dev                # all apps
 <pm> run backend:dev        # backend only (http://localhost:9000, admin at /app)
-<pm> run storefront:dev     # storefront only (http://localhost:8000)
+<pm> run storefront:dev     # storefront only (http://localhost:3000)
+<pm> run typecheck          # tsc --noEmit in both apps
 ```
 
 ### Build
@@ -104,9 +105,9 @@ cd apps/backend && <pm> run lint       # medusa lint
 cd apps/storefront && <pm> run lint    # eslint (flat config)
 ```
 
-### Test (backend only; the storefront has no test suite)
+### Test
 
-Run the suites from `apps/backend` — it defines no plain `test` script, so the root `<pm> run test` runs nothing there.
+`<pm> run test` at the root runs backend Jest unit tests (`test` script) and storefront Vitest (`src/**/*.test.ts`). Other backend suites run from `apps/backend`:
 
 ```bash
 cd apps/backend && <pm> run test:unit                      # **/src/**/__tests__/**/*.unit.spec.ts
@@ -128,7 +129,8 @@ cd apps/backend
 <pm> exec medusa db:generate <module-name>   # generate migrations for a custom module
 <pm> exec medusa db:migrate                  # run migrations + migration-scripts (initial data seed)
 <pm> exec medusa user -e admin@test.com -p supersecret
-<pm> exec medusa exec ./src/scripts/seed-demo-products.ts   # optional demo products
+<pm> exec medusa exec ./src/scripts/setup-india-market.ts   # idempotent India/INR setup; removes Medusa demo data
+# Do NOT run seed-demo-products.ts against the real store database: it re-adds Medusa demo apparel.
 ```
 
 ## Medusa Package Docs (`node_modules`)
