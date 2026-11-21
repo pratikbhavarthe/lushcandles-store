@@ -4,7 +4,7 @@ import RidgelineDitherFooter, {
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
 import { STORE_NAME } from "@lib/util/site-constants"
-import FlameMark from "@modules/layout/components/nav-bar/flame-mark"
+import BrandLogo from "@modules/layout/components/brand-logo"
 
 // Lush Candles "07 Pink" palette for the dithered ridges: page tint, Cotton
 // Candy, Rose Pink, Candy Pink, then deepened Passion Pink shades. The
@@ -83,7 +83,9 @@ export default async function Footer({ countryCode }: { countryCode: string }) {
     <RidgelineDitherFooter
       name={STORE_NAME}
       brandHref={to("")}
-      logo={<FlameMark className="h-7 w-7" />}
+      // The logo spells the name visually; the component's text label stays
+      // for screen readers only (.lush-footer rule in styles/globals.css).
+      logo={<BrandLogo className="h-9" alt="" />}
       tagline="Candles for quieter evenings."
       columns={columns}
       socials={[]}
