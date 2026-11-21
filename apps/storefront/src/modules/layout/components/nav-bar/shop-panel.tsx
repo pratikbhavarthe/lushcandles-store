@@ -49,7 +49,7 @@ export default function ShopPanel({
         <LocalizedClientLink
           href="/store"
           onClick={onNavigate}
-          className="inline-flex h-11 w-fit items-center gap-x-2 bg-lush-ink px-5 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink"
+          className="inline-flex h-11 w-fit items-center gap-x-2 rounded-full bg-lush-ink px-6 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink"
           data-testid="nav-shop-all"
         >
           Shop all candles <span aria-hidden>&rarr;</span>
