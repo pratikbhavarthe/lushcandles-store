@@ -96,8 +96,8 @@ export default async function Footer({ countryCode }: { countryCode: string }) {
       seed={23}
       ridges={7}
       altimeter={false}
-      // Full-bleed range; the text columns are re-centred at the site width
-      // by the .lush-footer rules in styles/globals.css.
+      // Full-bleed range and text, padded like the navbar by the
+      // .lush-footer rules in styles/globals.css.
       maxWidth="100%"
       className="lush-footer"
       fontFamily={FIGTREE}
