@@ -13,6 +13,7 @@ import { resolveProductIds } from "./helpers/resolve-product-ids";
 const PRODUCT_GRAPH_FIELDS = [
   "id",
   "title",
+  "subtitle",
   "description",
   "handle",
   "thumbnail",
@@ -23,11 +24,13 @@ const PRODUCT_GRAPH_FIELDS = [
   "tags.value",
   "options.title",
   "options.values.value",
+  "variants.id",
 ];
 
 type ProductRow = {
   id: string;
   title?: string | null;
+  subtitle?: string | null;
   description?: string | null;
   handle?: string | null;
   thumbnail?: string | null;
@@ -38,6 +41,7 @@ type ProductRow = {
   categories?: ({ name?: string | null } | null)[] | null;
   tags?: ({ value?: string | null } | null)[] | null;
   options?: ProductOptionRow[] | null;
+  variants?: ({ id?: string | null } | null)[] | null;
 };
 
 const productFields = search.define({
@@ -50,6 +54,11 @@ const productFields = search.define({
   handle: search.keyword().retrievable(),
   // Returned on hits only: never filtered, sorted or faceted on.
   thumbnail: search.keyword().retrievable(),
+  subtitle: search.keyword().retrievable(),
+  // Set only when the product has exactly one variant, so a listing card can
+  // add it to the bag directly; otherwise the card links to the product page
+  // to choose options.
+  variant_id: search.keyword().retrievable(),
   created_at: search.date().sortable().retrievable(),
   category: search.keyword().array().filterable().facetable().retrievable(),
   labels: search.keyword().array().filterable().facetable().retrievable(),
@@ -81,6 +90,10 @@ function toDocument(
     .map((salesChannel) => salesChannel?.id?.trim())
     .filter((id): id is string => Boolean(id));
 
+  const variantIds = (product.variants ?? [])
+    .map((variant) => variant?.id?.trim())
+    .filter((id): id is string => Boolean(id));
+
   return {
     id: product.id,
     status: product.status ?? null,
@@ -89,6 +102,8 @@ function toDocument(
     description: product.description ?? null,
     handle: product.handle ?? null,
     thumbnail: product.thumbnail ?? null,
+    subtitle: product.subtitle ?? null,
+    variant_id: variantIds.length === 1 ? variantIds[0] : null,
     created_at: product.created_at ?? null,
     category,
     labels,
