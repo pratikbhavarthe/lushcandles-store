@@ -24,3 +24,5 @@ build
 !.yarn/versions
 
 .medusa
+# Local file uploads and generated demo images
+/static

@@ -58,6 +58,22 @@ cd apps/backend && bunx medusa user -e you@example.com -p '<password>'
 Copy the publishable key from Admin > Settings > Publishable API Keys into
 `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` in `apps/storefront/.env.local`.
 
+### Demo products (optional)
+
+To preview the storefront before the real catalogue exists, add 16 clearly
+labelled demo candles. They come with demo categories, INR prices, a "Demo sale"
+price list and generated illustrations:
+
+```bash
+cd apps/backend && bunx medusa exec ./src/scripts/seed-demo-candles.ts
+```
+
+Remove all of it again with:
+
+```bash
+cd apps/backend && bunx medusa exec ./src/scripts/seed-demo-candles.ts remove
+```
+
 ## Daily commands (repo root)
 
 | Command | What it does |
