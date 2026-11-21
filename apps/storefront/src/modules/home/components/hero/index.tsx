@@ -1,4 +1,5 @@
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import HeroBackground from "./hero-background"
 
 /**
  * Typographic hero. No stock photography or marketing claims: swap in real
@@ -8,35 +9,36 @@ const Hero = () => {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative -mt-[72px] w-full overflow-hidden border-b border-lush-sand bg-lush-linen pt-[72px]"
+      className="relative isolate -mt-[72px] w-full overflow-hidden pt-[72px]"
     >
+      <HeroBackground />
       <div className="content-container grid min-h-[70vh] items-center gap-12 py-20 small:grid-cols-[1.2fr_1fr]">
         <div className="flex flex-col gap-6 motion-safe:animate-fade-in-top">
-          <p className="text-xs uppercase tracking-[0.3em] text-lush-clay">
+          <p className="text-xs uppercase tracking-[0.3em] text-white">
             Lush Candles
           </p>
           <h1
             id="hero-heading"
-            className="font-display text-5xl leading-[1.05] text-lush-ink small:text-7xl"
+            className="font-display text-5xl leading-[1.05] text-white small:text-7xl"
           >
             Candles for
             <br />
             quieter evenings.
           </h1>
-          <p className="max-w-md text-base leading-relaxed text-lush-umber">
+          <p className="max-w-md text-base leading-relaxed text-white/85">
             Browse the collection, choose your scent and size, and have it
             delivered to your door.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <LocalizedClientLink
               href="/store"
-              className="inline-flex h-11 items-center rounded-full bg-lush-ink px-7 text-sm text-lush-ivory transition-colors hover:bg-lush-umber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink"
+              className="inline-flex h-11 items-center rounded-full bg-white px-7 text-sm text-lush-ink transition-colors hover:bg-lush-ivory focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Shop all candles
             </LocalizedClientLink>
             <LocalizedClientLink
               href="/about"
-              className="inline-flex h-11 items-center rounded-full border border-lush-taupe px-7 text-sm text-lush-ink transition-colors hover:border-lush-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink"
+              className="inline-flex h-11 items-center rounded-full border border-white/60 px-7 text-sm text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Our story
             </LocalizedClientLink>
