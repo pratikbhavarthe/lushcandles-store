@@ -40,6 +40,17 @@ const DEMO_CATEGORY_HANDLES = ["shirts", "sweatshirts", "pants", "merch"]
 const DEMO_REGION_NAME = "Europe"
 const DEMO_STOCK_LOCATION_NAME = "European Warehouse"
 
+/**
+ * Shape of the stock location graph queried below. Declared explicitly so the
+ * script typechecks without Medusa's generated `.medusa/types` (as in CI).
+ */
+type FulfillmentSetGraph = {
+  id: string
+  service_zones?:
+    | ({ shipping_options?: ({ id: string } | null)[] | null } | null)[]
+    | null
+}
+
 const STORE_NAME = "Lush Candles"
 const INDIA_REGION_NAME = "India"
 const INDIA_STOCK_LOCATION_NAME = "India Warehouse (placeholder address)"
@@ -166,7 +177,7 @@ export default async function setupIndiaMarket({ container }: ExecArgs) {
     filters: { name: DEMO_STOCK_LOCATION_NAME },
   })
   for (const location of demoLocations) {
-    const sets = location.fulfillment_sets ?? []
+    const sets: (FulfillmentSetGraph | null)[] = location.fulfillment_sets ?? []
     const optionIds = sets.flatMap((s) =>
       (s?.service_zones ?? []).flatMap((z) =>
         (z?.shipping_options ?? []).map((o) => o!.id)

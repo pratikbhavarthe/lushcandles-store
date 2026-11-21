@@ -124,8 +124,8 @@ export default async function seedDemoProducts({ container }: ExecArgs) {
   const currencyCodes: string[] = (
     stores[0]?.supported_currencies ?? []
   )
-    .map((currency) => currency?.currency_code)
-    .filter((code): code is string => Boolean(code))
+    .map((currency: { currency_code?: string | null } | null) => currency?.currency_code)
+    .filter((code: string | null | undefined): code is string => Boolean(code))
 
   if (!currencyCodes.length) {
     throw new MedusaError(
@@ -209,8 +209,8 @@ export default async function seedDemoProducts({ container }: ExecArgs) {
       id: option.id as string,
       title: option.title as string,
       values: (option.values ?? [])
-        .map((value) => value?.value)
-        .filter((value): value is string => Boolean(value)),
+        .map((value: { value?: string | null } | null) => value?.value)
+        .filter((value: string | null | undefined): value is string => Boolean(value)),
     }))
     .filter((option) => option.values.length > 0)
 
