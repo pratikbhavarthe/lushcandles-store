@@ -3,6 +3,7 @@ import { Metadata } from "next"
 import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import Reveal from "@lib/motion/reveal"
 import { listCollections } from "@lib/data/collections"
 import { getRegion, listRegions } from "@lib/data/regions"
 import { jsonLdGraph, toJsonLd } from "@lib/util/json-ld"
@@ -95,19 +96,23 @@ export default async function Home(props: {
         </div>
       ) : (
         <section className="content-container py-24 text-center">
-          <h2 className="font-display text-3xl text-lush-ink">
-            The collection is on its way
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-lush-umber">
-            New candles are being added. In the meantime, browse everything
-            currently available.
-          </p>
-          <LocalizedClientLink
-            href="/store"
-            className="mt-8 inline-flex h-11 items-center rounded-full border border-lush-taupe px-7 text-sm hover:border-lush-ink"
-          >
-            View all products
-          </LocalizedClientLink>
+          <Reveal stagger="[data-reveal]" gap={0.1}>
+            <h2 data-reveal className="font-display text-3xl text-lush-ink">
+              The collection is on its way
+            </h2>
+            <p data-reveal className="mx-auto mt-3 max-w-md text-lush-umber">
+              New candles are being added. In the meantime, browse everything
+              currently available.
+            </p>
+            <div data-reveal>
+              <LocalizedClientLink
+                href="/store"
+                className="mt-8 inline-flex h-11 items-center rounded-full border border-lush-taupe px-7 text-sm hover:border-lush-ink"
+              >
+                View all products
+              </LocalizedClientLink>
+            </div>
+          </Reveal>
         </section>
       )}
     </>
