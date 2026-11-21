@@ -2,23 +2,33 @@
 
 import type { Hit } from "instantsearch.js"
 import { useEffect, useRef } from "react"
-import { useHits, useInstantSearch } from "react-instantsearch"
+import { useCurrentRefinements, useHits, useInstantSearch } from "react-instantsearch"
 
 import useSearchSettled from "@lib/hooks/use-search-settled"
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import repeat from "@lib/util/repeat"
 import { Text } from "@modules/common/components/ui"
-import Thumbnail from "@modules/products/components/thumbnail"
-import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
 import SearchPagination from "./pagination"
-import HitPrice, { HitPricing } from "./price"
+import ProductCard, { type ProductHitFields } from "./product-card"
 
-type ProductHit = Hit<
-  {
-    title: string | null
-    handle: string | null
-    thumbnail: string | null
-  } & HitPricing
->
+type ProductHit = Hit<ProductHitFields>
+
+// Edge-to-edge grid with narrow gutters; the skeleton shares it so the layout
+// doesn't jump when results arrive.
+const GRID =
+  "grid w-full grid-cols-2 gap-x-2 gap-y-10 small:gap-x-3 medium:grid-cols-3 large:grid-cols-4"
+
+const SkeletonGrid = ({ count }: { count: number }) => (
+  <ul className={GRID} data-testid="products-list-loader" aria-hidden>
+    {repeat(count).map((index) => (
+      <li key={index} className="animate-pulse">
+        <div className="aspect-[3/4] w-full bg-lush-cotton/35" />
+        <div className="mt-3 h-4 w-3/5 bg-lush-cotton/50" />
+        <div className="mt-2 h-4 w-2/5 bg-lush-cotton/40" />
+        <div className="mt-3 h-11 w-full rounded-full bg-lush-cotton/50" />
+      </li>
+    ))}
+  </ul>
+)
 
 type StoreHitsProps = {
   hitsPerPage: number
@@ -27,8 +37,12 @@ type StoreHitsProps = {
 
 const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
   const { items } = useHits<ProductHit>()
-  const { status, error, indexUiState } = useInstantSearch()
+  // Registers an error listener so a failed search is reported through
+  // `status`/`error` below rather than raised by InstantSearch.
+  const { status, error, indexUiState } = useInstantSearch({ catchError: true })
   const { isSearching, hasNoResultsYet } = useSearchSettled()
+  const { items: activeRefinements } = useCurrentRefinements()
+  const isUnfiltered = !activeRefinements.length && !indexUiState.query
 
   const { page, ...refinements } = indexUiState
   const currentPage = page ?? 1
@@ -48,54 +62,41 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
 
   const showSkeleton = hasNoResultsYet || (isSearching && isPagingOnly)
 
-  if (status === "error") {
-    return (
-      <Text
-        className="py-16 text-center text-ui-fg-error"
-        data-testid="products-error"
-      >
-        Couldn&apos;t load products
-        {error?.message ? `: ${error.message}` : "."}
-      </Text>
-    )
-  }
-
+  // SearchPagination stays mounted in every state, the error included.
+  // Unmounting a widget makes InstantSearch search again, so returning early
+  // on error caused a loop: error, unmount, search, loading, remount, search,
+  // error, at dozens of requests a second.
   return (
     <>
-      {showSkeleton ? (
-        <SkeletonProductGrid numberOfProducts={hitsPerPage} />
+      {status === "error" ? (
+        <Text
+          className="py-24 text-center text-ui-fg-error"
+          data-testid="products-error"
+        >
+          Couldn&apos;t load products
+          {error?.message ? `: ${error.message}` : "."}
+        </Text>
+      ) : showSkeleton ? (
+        <SkeletonGrid count={hitsPerPage} />
       ) : !items.length ? (
         <Text
-          className="py-16 text-center text-ui-fg-subtle"
+          className="py-24 text-center text-lush-umber"
           data-testid="no-products"
         >
-          No products matched these filters.
+          {isUnfiltered
+            ? "No candles are available yet."
+            : "No candles matched these filters."}
         </Text>
       ) : (
-        <ul
-          className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
-          data-testid="products-list"
-        >
-          {items.map((hit) =>
+        <ul className={GRID} data-testid="products-list">
+          {items.map((hit, index) =>
             hit.handle ? (
               <li key={hit.objectID}>
-                <LocalizedClientLink
-                  href={`/products/${hit.handle}`}
-                  className="group"
-                >
-                  <div data-testid="product-wrapper">
-                    <Thumbnail thumbnail={hit.thumbnail} size="full" />
-                    <div className="flex txt-compact-medium mt-4 justify-between">
-                      <Text
-                        className="text-ui-fg-subtle"
-                        data-testid="product-title"
-                      >
-                        {hit.title}
-                      </Text>
-                      <HitPrice hit={hit} currencyCode={currencyCode} />
-                    </div>
-                  </div>
-                </LocalizedClientLink>
+                <ProductCard
+                  hit={hit}
+                  currencyCode={currencyCode}
+                  priority={index < 4}
+                />
               </li>
             ) : null
           )}

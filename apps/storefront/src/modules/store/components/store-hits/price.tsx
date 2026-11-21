@@ -1,58 +1,46 @@
-"use client"
-
-import { indexedCurrency, priceAttribute } from "@lib/search-client"
+import { indexedCurrency, priceAttribute } from "@lib/util/search-price"
 import { convertToLocale } from "@lib/util/money"
-import { Text, clx } from "@modules/common/components/ui"
 
-/** The per-currency price fields a hit may carry, e.g. `min_price_eur`. */
+/** The per-currency price fields a hit may carry, e.g. `min_price_inr`. */
 export type HitPricing = Record<string, unknown>
 
-type HitPriceProps = {
-  hit: HitPricing
-  currencyCode: string
+export type HitPrice = {
+  /** What the card shows: one price, or "From …" for a price range. */
+  label: string
+  /** Pre-sale price, only for a single-price product that is on sale. */
+  original: string | null
+  /** Amount saved, formatted, under the same condition as `original`. */
+  savings: string | null
 }
 
 const amount = (value: unknown) => (typeof value === "number" ? value : null)
 
-const HitPrice = ({ hit, currencyCode }: HitPriceProps) => {
+/** Reads a hit's indexed price fields for the region's currency. */
+export function getHitPrice(hit: HitPricing, currencyCode: string): HitPrice | null {
   const currency_code = indexedCurrency(currencyCode)
-  const min_price = amount(hit[priceAttribute("min_price", currencyCode)])
-  const max_price = amount(hit[priceAttribute("max_price", currencyCode)])
-  const original_price = amount(
-    hit[priceAttribute("original_price", currencyCode)]
-  )
-  const on_sale = hit[priceAttribute("on_sale", currencyCode)] === true
+  const min = amount(hit[priceAttribute("min_price", currencyCode)])
+  const max = amount(hit[priceAttribute("max_price", currencyCode)]) ?? min
+  const original = amount(hit[priceAttribute("original_price", currencyCode)])
+  const onSale = hit[priceAttribute("on_sale", currencyCode)] === true
 
-  if (min_price === null) {
+  if (min === null || max === null) {
     return null
   }
 
+  // Whole amounts drop the ".00" (₹1,299 rather than ₹1,299.00).
   const format = (value: number) =>
-    convertToLocale({ amount: value, currency_code })
+    convertToLocale({
+      amount: value,
+      currency_code,
+      minimumFractionDigits: Number.isInteger(value) ? 0 : undefined,
+      maximumFractionDigits: Number.isInteger(value) ? 0 : undefined,
+    })
+  const isRange = max > min
+  const discounted = !isRange && onSale && original !== null && original > min
 
-  const max = max_price ?? min_price
-  const isRange = max > min_price
-
-  return (
-    <div className="flex items-center gap-x-2" data-testid="product-price">
-      {!isRange && on_sale && original_price !== null && (
-        <Text
-          className="line-through text-ui-fg-muted"
-          data-testid="original-price"
-        >
-          {format(original_price)}
-        </Text>
-      )}
-      <Text
-        className={clx("text-ui-fg-muted", {
-          "text-ui-tag-red-text": on_sale,
-        })}
-        data-testid="price"
-      >
-        {isRange ? `${format(min_price)} - ${format(max)}` : format(min_price)}
-      </Text>
-    </div>
-  )
+  return {
+    label: isRange ? `From ${format(min)}` : format(min),
+    original: discounted ? format(original) : null,
+    savings: discounted ? format(original - min) : null,
+  }
 }
-
-export default HitPrice
