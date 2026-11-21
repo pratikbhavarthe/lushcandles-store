@@ -1,194 +1,105 @@
-import { listCategories } from "@lib/data/categories";
-import { listCollections } from "@lib/data/collections";
-import { Text, clx } from "@modules/common/components/ui";
+import RidgelineDitherFooter, {
+  type RidgelineColumn,
+} from "@/components/ui/ridgeline-dither-footer"
+import { listCategories } from "@lib/data/categories"
+import { listCollections } from "@lib/data/collections"
+import { STORE_NAME } from "@lib/util/site-constants"
+import FlameMark from "@modules/layout/components/nav-bar/flame-mark"
 
-import LocalizedClientLink from "@modules/common/components/localized-client-link";
-import { STORE_NAME } from "@lib/util/site-constants";
+// Lush Candles palette for the dithered ridges: ivory paper through sand and
+// clay to the deepest umber. The luminance steps follow the component's
+// "glacier" demo ramp so the range keeps the same depth in warm colours.
+// Text colours checked against the paper for WCAG AA: ink 14.3:1,
+// muted 6.2:1, link-hover accent (tones[4]) 6.1:1.
+const PALETTE = {
+  paper: "#FAF7F2",
+  ink: "#2A2420",
+  muted: "#6B5A4A",
+  line: "#E6DCCC",
+  heart: "#7C5535",
+  tones: ["#FAF7F2", "#EEE1CE", "#D8BC96", "#B0865C", "#7C5535", "#4A3221", "#22160E"],
+}
 
-export default async function Footer() {
-  const [{ collections }, productCategories] = await Promise.all([
-    listCollections({ fields: "id,handle,title" }),
-    listCategories({
-      fields:
-        "id,name,handle,parent_category_id,category_children.id,category_children.name,category_children.handle",
-    }),
-  ]);
+const FIGTREE = "var(--font-figtree), ui-sans-serif, system-ui, sans-serif"
+
+const settle = async <T,>(promise: Promise<T>, fallback: T): Promise<T> => {
+  try {
+    return await promise
+  } catch {
+    return fallback
+  }
+}
+
+export default async function Footer({ countryCode }: { countryCode: string }) {
+  const [categories, collections] = await Promise.all([
+    settle(listCategories({ fields: "id,name,handle,parent_category_id", limit: 50 }), []),
+    settle(
+      listCollections({ fields: "id,handle,title", limit: "6" }).then((r) => r.collections),
+      []
+    ),
+  ])
+
+  // The component renders plain anchors, so every href carries the country prefix.
+  const to = (path: string) => `/${countryCode}${path}`
+
+  const columns: RidgelineColumn[] = [
+    {
+      title: "Shop",
+      links: [
+        { label: "All candles", href: to("/store") },
+        ...categories
+          .filter((c) => !c.parent_category_id)
+          .slice(0, 5)
+          .map((c) => ({ label: c.name, href: to(`/categories/${c.handle}`) })),
+      ],
+    },
+    ...(collections.length
+      ? [
+          {
+            title: "Collections",
+            links: collections.map((c) => ({ label: c.title, href: to(`/collections/${c.handle}`) })),
+          },
+        ]
+      : []),
+    {
+      title: "Help",
+      links: [
+        { label: "Shipping", href: to("/shipping") },
+        { label: "Returns", href: to("/returns") },
+        { label: "Contact", href: to("/contact") },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About us", href: to("/about") },
+        { label: "Privacy policy", href: to("/privacy") },
+        { label: "Terms of service", href: to("/terms") },
+      ],
+    },
+  ]
 
   return (
-    <footer className="border-t border-lush-sand bg-lush-linen w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-24">
-          <div>
-            <LocalizedClientLink
-              href="/"
-              className="font-display text-3xl text-lush-ink hover:text-lush-clay"
-            >
-              {STORE_NAME}
-            </LocalizedClientLink>
-          </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category_id) {
-                      return;
-                    }
-
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null;
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">
-                Customer service
-              </span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/shipping"
-                  >
-                    Shipping information
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/returns"
-                  >
-                    Return policy
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/terms"
-                  >
-                    Terms of service
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/privacy"
-                  >
-                    Privacy policy
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/contact"
-                  >
-                    Contact
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink
-                    className="hover:text-ui-fg-base"
-                    href="/search"
-                  >
-                    Search
-                  </LocalizedClientLink>
-                </li>
-              </ul>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Company</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <LocalizedClientLink className="hover:text-ui-fg-base" href="/about">
-                    About us
-                  </LocalizedClientLink>
-                </li>
-                <li>
-                  <LocalizedClientLink className="hover:text-ui-fg-base" href="/store">
-                    Shop all
-                  </LocalizedClientLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} {STORE_NAME}. All rights reserved.
-          </Text>
-        </div>
-      </div>
-    </footer>
-  );
+    <RidgelineDitherFooter
+      name={STORE_NAME}
+      brandHref={to("")}
+      logo={<FlameMark className="h-7 w-7" />}
+      tagline="Candles for quieter evenings."
+      columns={columns}
+      socials={[]}
+      copyright={`© ${new Date().getFullYear()} ${STORE_NAME}. All rights reserved.`}
+      credit={null}
+      preset="sepia"
+      palette={PALETTE}
+      seed={23}
+      ridges={7}
+      altimeter={false}
+      // Full-bleed range; the text columns are re-centred at the site width
+      // by the .lush-footer rules in styles/globals.css.
+      maxWidth="100%"
+      className="lush-footer"
+      fontFamily={FIGTREE}
+      monoFamily={FIGTREE}
+    />
+  )
 }

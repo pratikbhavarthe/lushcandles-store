@@ -146,3 +146,14 @@
     letter-spacing: -0.02em;
   }
 }
+
+/*
+ * Footer (RidgelineDitherFooter): the dithered range spans the full width,
+ * while the brand, link columns and copyright stay centred within 1280px.
+ * Two-class selectors outrank the component's scoped .rdf-* rules.
+ */
+.lush-footer .rdf-top,
+.lush-footer .rdf-bar {
+  padding-left: max(var(--rdf-pad), calc((100% - 1280px) / 2 + var(--rdf-pad)));
+  padding-right: max(var(--rdf-pad), calc((100% - 1280px) / 2 + var(--rdf-pad)));
+}
