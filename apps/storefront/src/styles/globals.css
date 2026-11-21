@@ -121,3 +121,28 @@
     @apply text-[32px] leading-[44px] font-semibold;
   }
 }
+
+/*
+ * The Medusa UI preset hard-codes Inter in its typography classes (txt-*,
+ * h1-* to h4-*). Point them at Figtree so the starter components match the
+ * rest of the site. code-* classes keep their monospace font.
+ */
+[class^="txt-"],
+[class*=" txt-"],
+[class^="h1-"],
+[class*=" h1-"],
+[class^="h2-"],
+[class*=" h2-"],
+[class^="h3-"],
+[class*=" h3-"],
+[class^="h4-"],
+[class*=" h4-"] {
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  /* Large Figtree headings read better slightly tightened. */
+  .font-display {
+    letter-spacing: -0.02em;
+  }
+}

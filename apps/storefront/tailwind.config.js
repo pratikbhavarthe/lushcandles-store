@@ -67,19 +67,13 @@ module.exports = {
       fontSize: {
         "3xl": "2rem",
       },
+      // Every role maps to Figtree. The role names stay so a page can still
+      // say "display heading" or "utility label" and a typeface change is a
+      // one-line edit here.
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
-        sans: [
-          "var(--font-sans)",
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
-          "Ubuntu",
-          "sans-serif",
-        ],
+        sans: ["var(--font-figtree)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        display: ["var(--font-figtree)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-figtree)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       keyframes: {
         ring: {
