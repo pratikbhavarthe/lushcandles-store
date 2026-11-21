@@ -9,17 +9,19 @@ import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CountrySelect from "@modules/layout/components/country-select"
 import LanguageSelect from "@modules/layout/components/language-select"
-import { isActivePath, PRIMARY_NAV, SECONDARY_NAV } from "@modules/layout/nav-items"
+import type { ShopMenuData } from "@lib/data/navigation"
+import { HELP_NAV, isActivePath, LEGAL_NAV, PRIMARY_NAV } from "@modules/layout/nav-items"
 import { useParams, usePathname } from "next/navigation"
 import { useState } from "react"
 
 type MobileMenuProps = {
+  shopMenu: ShopMenuData
   regions: HttpTypes.StoreRegion[] | null
   locales: Locale[] | null
   currentLocale: string | null
 }
 
-export default function MobileMenu({ regions, locales, currentLocale }: MobileMenuProps) {
+export default function MobileMenu({ shopMenu, regions, locales, currentLocale }: MobileMenuProps) {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
   const pathname = usePathname()
@@ -96,6 +98,32 @@ export default function MobileMenu({ regions, locales, currentLocale }: MobileMe
               })}
             </ul>
 
+            {[
+              { title: "Shop by type", links: shopMenu.categories },
+              { title: "Collections", links: shopMenu.collections },
+            ]
+              .filter((group) => group.links.length > 0)
+              .map((group) => (
+                <div key={group.title} className="mt-8">
+                  <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-lush-umber">
+                    {group.title}
+                  </p>
+                  <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+                    {group.links.map((link) => (
+                      <li key={link.href}>
+                        <LocalizedClientLink
+                          href={link.href}
+                          onClick={close}
+                          className="text-[15px] text-lush-ink hover:text-lush-clay"
+                        >
+                          {link.label}
+                        </LocalizedClientLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
             <ul className="mt-8 flex gap-x-6 text-sm text-lush-umber">
               <li>
                 <LocalizedClientLink href="/account" onClick={close} className="hover:text-lush-ink" data-testid="account-link">
@@ -121,7 +149,7 @@ export default function MobileMenu({ regions, locales, currentLocale }: MobileMe
             )}
             {showCountry && <CountrySelect toggleState={countryToggle} regions={regions!} />}
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
-              {SECONDARY_NAV.map((item) => (
+              {[...HELP_NAV.filter((i) => i.href !== "/contact"), ...LEGAL_NAV].map((item) => (
                 <li key={item.href}>
                   <LocalizedClientLink href={item.href} onClick={close} className="hover:text-lush-ink">
                     {item.label}
