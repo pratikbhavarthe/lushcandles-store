@@ -102,6 +102,4 @@ export const buildProductStructuredData = ({
   }
 }
 
-/** Serializes JSON-LD for a `<script>` tag without allowing `</script>` breakouts. */
-export const toJsonLd = (data: unknown) =>
-  JSON.stringify(data).replace(/</g, "\\u003c")
+export { toJsonLd } from "./json-ld"
