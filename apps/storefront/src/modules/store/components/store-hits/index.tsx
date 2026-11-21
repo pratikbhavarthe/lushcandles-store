@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react"
 import { useCurrentRefinements, useHits, useInstantSearch } from "react-instantsearch"
 
 import useSearchSettled from "@lib/hooks/use-search-settled"
+import { useBatchReveal } from "@lib/motion/use-batch-reveal"
 import repeat from "@lib/util/repeat"
 import { Text } from "@modules/common/components/ui"
 import SearchPagination from "./pagination"
@@ -37,6 +38,7 @@ type StoreHitsProps = {
 
 const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
   const { items } = useHits<ProductHit>()
+  const grid = useRef<HTMLUListElement>(null)
   // Registers an error listener so a failed search is reported through
   // `status`/`error` below rather than raised by InstantSearch.
   const { status, error, indexUiState } = useInstantSearch({ catchError: true })
@@ -61,6 +63,9 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
     currentPage !== settled.current.page
 
   const showSkeleton = hasNoResultsYet || (isSearching && isPagingOnly)
+
+  // Re-run the entrance when the visible set of products changes.
+  useBatchReveal(grid, showSkeleton ? "" : items.map((hit) => hit.objectID).join(","))
 
   // SearchPagination stays mounted in every state, the error included.
   // Unmounting a widget makes InstantSearch search again, so returning early
@@ -88,7 +93,7 @@ const StoreHits = ({ hitsPerPage, currencyCode }: StoreHitsProps) => {
             : "No candles matched these filters."}
         </Text>
       ) : (
-        <ul className={GRID} data-testid="products-list">
+        <ul ref={grid} className={GRID} data-testid="products-list">
           {items.map((hit, index) =>
             hit.handle ? (
               <li key={hit.objectID}>
