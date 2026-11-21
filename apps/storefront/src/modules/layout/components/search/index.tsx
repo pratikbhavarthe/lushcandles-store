@@ -17,6 +17,7 @@ import useSearchSettled from "@lib/hooks/use-search-settled"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { PRODUCT_INDEX_NAME, searchClient } from "@lib/search-client"
 import { Text } from "@modules/common/components/ui"
+import { NAV_ICON_CLASS } from "@modules/layout/nav-styles"
 import SearchDrawer from "./drawer"
 import SearchHit, { ProductHit } from "./hit"
 
@@ -129,7 +130,7 @@ const Search = () => {
           open()
         }}
         aria-label="Search products"
-        className="flex items-center hover:text-ui-fg-base"
+        className={NAV_ICON_CLASS}
         data-testid="nav-search-button"
       >
         <MagnifyingGlass />
