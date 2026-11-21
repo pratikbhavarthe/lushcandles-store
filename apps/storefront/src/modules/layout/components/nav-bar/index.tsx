@@ -192,7 +192,7 @@ export default function NavBar({ shopMenu, regions, locales, currentLocale, cart
             <LocalizedClientLink
               href="/store"
               onClick={close}
-              className="hidden h-11 shrink-0 items-center gap-x-2 whitespace-nowrap bg-lush-ink px-5 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink small:flex"
+              className="hidden h-11 shrink-0 items-center gap-x-2 whitespace-nowrap rounded-full bg-lush-ink px-6 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lush-ink small:flex"
               data-testid="nav-cta"
             >
               Shop all
@@ -228,7 +228,7 @@ export default function NavBar({ shopMenu, regions, locales, currentLocale, cart
               <LocalizedClientLink
                 href="/contact"
                 onClick={close}
-                className="mt-6 inline-flex h-11 w-fit items-center gap-x-2 bg-lush-ink px-5 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber"
+                className="mt-6 inline-flex h-11 w-fit items-center gap-x-2 rounded-full bg-lush-ink px-6 font-mono text-[12px] uppercase tracking-[0.1em] text-white transition-colors hover:bg-lush-umber"
               >
                 Get in touch <span aria-hidden>&rarr;</span>
               </LocalizedClientLink>
