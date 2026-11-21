@@ -5,7 +5,7 @@ import Hero from "@modules/home/components/hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { listCollections } from "@lib/data/collections"
 import { getRegion, listRegions } from "@lib/data/regions"
-import { toJsonLd } from "@lib/util/product-structured-data"
+import { jsonLdGraph, toJsonLd } from "@lib/util/json-ld"
 import { getSiteOrigin, listCountryCodes, STORE_NAME } from "@lib/util/site"
 import { buildRegionsReturnPolicies } from "@lib/util/store-policies"
 
@@ -56,9 +56,8 @@ export default async function Home(props: {
   const [origin, regions] = await Promise.all([getSiteOrigin(), listRegions()])
   const homeUrl = `${origin}/${countryCode}`
   const returnPolicies = buildRegionsReturnPolicies(regions)
-  const structuredData = [
+  const structuredData = jsonLdGraph([
     {
-      "@context": "https://schema.org",
       "@type": "Organization",
       name: STORE_NAME,
       url: origin,
@@ -67,7 +66,6 @@ export default async function Home(props: {
         : {}),
     },
     {
-      "@context": "https://schema.org",
       "@type": "WebSite",
       name: STORE_NAME,
       url: homeUrl,
@@ -80,7 +78,7 @@ export default async function Home(props: {
         "query-input": "required name=search_term_string",
       },
     },
-  ]
+  ])
 
   return (
     <>
