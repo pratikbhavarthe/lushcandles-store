@@ -40,14 +40,13 @@ const DEMO_CATEGORY_HANDLES = ["shirts", "sweatshirts", "pants", "merch"]
 const DEMO_REGION_NAME = "Europe"
 const DEMO_STOCK_LOCATION_NAME = "European Warehouse"
 
+const STORE_NAME = "Lush Candles"
 const INDIA_REGION_NAME = "India"
 const INDIA_STOCK_LOCATION_NAME = "India Warehouse (placeholder address)"
 
 export default async function setupIndiaMarket({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const link = container.resolve(ContainerRegistrationKeys.LINK)
-  const fulfillmentModule = container.resolve(Modules.FULFILLMENT)
   const taxModule = container.resolve(Modules.TAX)
 
   // --- Store currency -----------------------------------------------------
@@ -196,10 +195,35 @@ export default async function setupIndiaMarket({ container }: ExecArgs) {
     fields: ["id"],
     filters: { name: INDIA_STOCK_LOCATION_NAME },
   })
-  if (indiaLocations.length) {
-    logger.info("India warehouse already exists. Done.")
-    return
+  let indiaLocationId = indiaLocations[0]?.id
+  if (indiaLocationId) {
+    logger.info("India warehouse already exists.")
+  } else {
+    indiaLocationId = await createIndiaWarehouse(container, indiaRegionId!)
   }
+
+  // --- Store identity and defaults ---------------------------------------
+  await updateStoresWorkflow(container).run({
+    input: {
+      selector: { id: store.id },
+      update: {
+        name: STORE_NAME,
+        default_region_id: indiaRegionId,
+        default_location_id: indiaLocationId,
+      },
+    },
+  })
+  logger.info(`Store renamed to "${STORE_NAME}" with India as default region and location.`)
+}
+
+async function createIndiaWarehouse(
+  container: ExecArgs["container"],
+  indiaRegionId: string
+): Promise<string> {
+  const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const link = container.resolve(ContainerRegistrationKeys.LINK)
+  const fulfillmentModule = container.resolve(Modules.FULFILLMENT)
 
   const {
     result: [stockLocation],
@@ -277,4 +301,5 @@ export default async function setupIndiaMarket({ container }: ExecArgs) {
   }
 
   logger.info("Created India warehouse, fulfillment set and placeholder shipping option.")
+  return stockLocation.id
 }
