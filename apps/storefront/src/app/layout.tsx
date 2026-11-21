@@ -1,19 +1,13 @@
 import { getBaseURL } from "@lib/util/env"
 import { STORE_NAME } from "@lib/util/site-constants"
 import { Metadata } from "next"
-import { Cormorant_Garamond, Inter } from "next/font/google"
+import { Figtree } from "next/font/google"
 import "styles/globals.css"
 
-const display = Cormorant_Garamond({
+// Figtree is the single typeface for the whole site (variable font, all weights).
+const figtree = Figtree({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-display",
-  display: "swap",
-})
-
-const sans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-figtree",
   display: "swap",
 })
 
@@ -32,7 +26,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html
       lang="en-IN"
       data-mode="light"
-      className={`${display.variable} ${sans.variable}`}
+      className={figtree.variable}
     >
       <head>
         <link rel="ucp" href="/.well-known/ucp" />
