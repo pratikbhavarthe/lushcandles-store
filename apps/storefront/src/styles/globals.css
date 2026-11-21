@@ -178,3 +178,8 @@
 .legal-prose strong {
   @apply font-semibold text-lush-ink;
 }
+
+/* The footer logo image already contains the name. */
+.lush-footer .rdf-logo > span {
+  @apply sr-only;
+}

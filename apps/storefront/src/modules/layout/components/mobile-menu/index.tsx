@@ -7,6 +7,7 @@ import { STORE_NAME } from "@lib/util/site-constants"
 import { BarsThree, XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import BrandLogo from "@modules/layout/components/brand-logo"
 import CountrySelect from "@modules/layout/components/country-select"
 import LanguageSelect from "@modules/layout/components/language-select"
 import type { ShopMenuData } from "@lib/data/navigation"
@@ -56,7 +57,9 @@ export default function MobileMenu({ shopMenu, regions, locales, currentLocale }
           data-testid="nav-menu-popup"
         >
           <div className="flex h-12 items-center justify-between">
-            <DialogTitle className="font-display text-2xl text-lush-ink">{STORE_NAME}</DialogTitle>
+            <DialogTitle>
+              <BrandLogo className="h-7" />
+            </DialogTitle>
             <button
               type="button"
               onClick={close}

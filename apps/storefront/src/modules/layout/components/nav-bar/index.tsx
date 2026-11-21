@@ -4,13 +4,13 @@ import type { ShopMenuData } from "@lib/data/navigation"
 import type { Locale } from "@lib/data/locales"
 import { STORE_NAME } from "@lib/util/site-constants"
 import { HttpTypes } from "@medusajs/types"
+import BrandLogo from "@modules/layout/components/brand-logo"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { clx } from "@modules/common/components/ui"
 import MobileMenu from "@modules/layout/components/mobile-menu"
 import Search from "@modules/layout/components/search"
 import { HELP_NAV, isActivePath, LEGAL_NAV } from "@modules/layout/nav-items"
 import { NAV_TEXT_LINK } from "@modules/layout/nav-styles"
-import FlameMark from "./flame-mark"
 import { useParams, usePathname } from "next/navigation"
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { PanelColumn, PanelLink } from "./panel-parts"
@@ -167,13 +167,10 @@ export default function NavBar({ shopMenu, regions, locales, currentLocale, cart
             href="/"
             onClick={close}
             aria-label={`${STORE_NAME} home`}
-            className="group/logo flex shrink-0 items-center gap-x-2.5 whitespace-nowrap text-lush-ink transition-colors hover:text-lush-clay"
+            className="flex shrink-0 items-center rounded-md transition-opacity hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lush-ink"
             data-testid="nav-store-link"
           >
-            <FlameMark className="h-8 w-8 small:h-9 small:w-9" />
-            <span className="font-display text-[1.55rem] leading-none tracking-wide small:text-[1.85rem]">
-              {STORE_NAME}
-            </span>
+            <BrandLogo className="h-7 small:h-9" priority />
           </LocalizedClientLink>
 
           <div className="flex items-center justify-end gap-x-5 medium:gap-x-6">
