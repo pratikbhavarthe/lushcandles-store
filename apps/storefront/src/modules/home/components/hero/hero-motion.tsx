@@ -6,9 +6,9 @@ import { MOTION_OK, gsap, useGSAP } from "@lib/motion/gsap"
 
 /**
  * Scroll-linked depth for the hero: as it scrolls away, the copy rises and
- * fades a little faster than the page and the candle drifts slower, so the
- * two separate. Scrubbed to the scroll position, so it reverses on the way
- * back up. Static with reduced motion.
+ * fades a little faster than the page, while the photo scrolls normally (it is
+ * never transformed, so it stays pixel-sharp). Scrubbed to the scroll
+ * position, so it reverses on the way back up. Static with reduced motion.
  */
 export default function HeroMotion({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null)
@@ -24,7 +24,6 @@ export default function HeroMotion({ children }: { children: ReactNode }) {
           scrub: true,
         }
         gsap.to("[data-hero-text]", { y: -90, autoAlpha: 0.15, ease: "none", scrollTrigger })
-        gsap.to("[data-hero-candle]", { y: 50, ease: "none", scrollTrigger })
       })
       return () => mm.revert()
     },
